@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>todo</title>
+  </head>
+  <body>
+    <section class="todoapp">
+      <header class="header">
+        <h1>{{title}}</h1>
+        <input class="new-todo" placeholder="添加要添加的内容" autofocus
+        :value="newTodo"
+        v-model.trim="newTodo"
+        @keyup.enter="addTodo($event)"
+        >
+      </header>
+      <section class="main">
+        <input class="toggle-all" id="toggle-all" type="checkbox" v-model="isAll">
+        <label for="toggle-all" title="选择全部">选择全部</label>
+        <ul class="todo-list" v-if="filteredTodos.length>0">
+          <li :class="{completed:todo.completed,editing:todo==editedTodo}" v-for="(todo,index) in filteredTodos">
+            <div class="view">
+              <input class="toggle" type="checkbox" v-model="todo.completed">
+              <label @dblclick="editTodo(todo)">{{todo.content}}</label>
+              <button class="destroy"
+              @click="removeTodo(index)"
+              ></button>
+            </div>
+            <input class="edit"
+                  v-model.trim ="todo.content"
+                  @blur="doneEdit(todo,index)"
+                  @keyup.esc="cancleEdit(todo)"
+                  @keyup.enter="doneEdit(todo,index)"
+                  v-focus="todo==editedTodo"
+            >
+          </li>
+        </ul>
+        <ul class="todo-list" v-show='todos.length>0' v-else>
+          <li>
+          <div class="view">
+            <label for="">暂无信息</label>
+            </div>
+          </li>
+        </ul>
+      </section>
+      <footer class="footer" v-show='todos.length>0'>
+        <span class="todo-count">已选<strong>{{remain }}</strong> {{todos.length>1?'个（复）':'个（单）'}}，总数{{todos.length}}</span>
+        <ul class="filters">
+          <li>
+            <a :class="{selected:hashName == 'all'}" href="#/">所有</a>
+          </li>
+          <li>
+            <a :class="{selected:hashName == 'active'}" href="#/active">未选中</a>
+          </li>
+          <li>
+            <a :class="{selected:hashName == 'completed'}" href="#/completed">已选中</a>
+          </li>
+        </ul>
+        <button class="clear-completed" @click="clear">删除选中</button>
+      </footer>
+    </section>
+    <footer class="info">
+      <p>双击即可编辑修改列表内容</p>
+      <p>按esc既可退出编辑</p>
+    </footer>
+  </body>
+</html>
